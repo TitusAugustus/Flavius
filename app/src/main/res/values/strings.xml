@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Flavius</string>
+    <string name="app_name">The Titus Project</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>

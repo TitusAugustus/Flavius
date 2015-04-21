@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="BubbleViewGroup">
+        <attr name="bol" format="boolean"/>
+        <attr name="flt" format="float"/>
+        <attr name="position" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>
