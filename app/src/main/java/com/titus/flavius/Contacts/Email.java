@@ -1,12 +1,14 @@
 package com.titus.flavius.Contacts;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Email {
+public class Email implements Serializable {
     static Pattern emailPattern = Pattern.compile("^(.*)@(.*)$");
 
     private String name, domain;
+
 
     public Email(String emailAddr){
         Matcher matcher = emailPattern.matcher(emailAddr);

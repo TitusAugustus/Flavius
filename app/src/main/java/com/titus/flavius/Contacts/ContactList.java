@@ -1,12 +1,12 @@
 package com.titus.flavius.Contacts;
 
-import android.util.Log;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ContactList {
+public class ContactList implements Serializable{
     private volatile ArrayList<Contact> contacts = new ArrayList<Contact>();
+
 
     public ArrayList<Contact> getAllContacts() {
         return contacts;
@@ -34,5 +34,13 @@ public class ContactList {
         for (Contact c : contacts)
             result.add(c.getName());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        String res = "";
+        for(Contact contact : contacts)
+            res += "\n" + contact.toString();
+        return res.substring(1);
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -18,13 +19,19 @@ import android.widget.ViewFlipper;
 
 import com.titus.flavius.Bubbles.BubbleViewGroup;
 import com.titus.flavius.Contacts.Contact;
+import com.titus.flavius.Contacts.ContactList;
+import com.titus.flavius.ReadingWriting.Reader;
+import com.titus.flavius.ReadingWriting.Writer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+    private final String ALL_CONTACTS_NAME = "allcontacts";
+
     ReloadListReceiver mReceiver = new ReloadListReceiver();
     private ViewFlipper viewFlipper;
     private final float screenPctgNeededForFlip = .90f;
@@ -36,8 +43,17 @@ public class MainActivity extends ActionBarActivity {
 
         viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
-        final BubbleViewGroup bubbleVG = (BubbleViewGroup) this.findViewById(R.id.BubbleVG);
+        final BubbleViewGroup bubbleVG = (BubbleViewGroup) findViewById(R.id.BubbleVG);
         bubbleVG.addBubble(this);
+
+        //if there's old info, reuse it
+        File storedList = new File(getFilesDir(), ALL_CONTACTS_NAME);
+        if(storedList.exists()){
+            Log.d("ZS","got old info");
+            ContactList list = Reader.readContactList(storedList);
+            ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
+            reloadContactsList();
+        }
 
         //start get contact info from phone
         Intent intent = new Intent(getApplicationContext(), GetContactsService.class);
@@ -53,8 +69,8 @@ public class MainActivity extends ActionBarActivity {
     public void reloadContactsList(){
         ListView contactListView = (ListView) findViewById(R.id.listView);
 
-        ArrayList<String> list = ((TitusApplication) this.getApplication()).getAllContacts().getContactNames();
-        list.add(((TitusApplication) this.getApplication()).getAllContacts().getAllContacts().size() + "");
+        ArrayList<String> list = ((TitusApplication) getApplication()).getContactList().getContactNames();
+        list.add(((TitusApplication) getApplication()).getContactList().getAllContacts().size() + "");
         final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         contactListView.setAdapter(adapter);
 
@@ -62,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                Contact currContact = ((TitusApplication) getApplication()).getAllContacts().getContactFromName(item);
+                Contact currContact = ((TitusApplication) getApplication()).getContactList().getContactFromName(item);
                 ((TextView) findViewById(R.id.nameTextView)).setText(currContact.getName());
                 ((TextView) findViewById(R.id.phoneTextView)).setText(currContact.getPhoneNumberText());
                 ((TextView) findViewById(R.id.emailTextView)).setText(currContact.getEmailText());
@@ -90,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onTouchEvent(MotionEvent touchEvent) {
         if(touchEvent.getAction() == MotionEvent.ACTION_DOWN){
             float currentX = touchEvent.getX();
-            if (currentX < this.getWindow().getDecorView().getWidth() / 2)
+            if (currentX < getWindow().getDecorView().getWidth() / 2)
                 flipPrevious();
             else
                 flipNext();
@@ -128,6 +144,9 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent){
             if(intent.getAction().equals(RELOAD_CONTACTS_LIST_MSG)){
                 reloadContactsList();
+                File file = new File(context.getFilesDir(), ALL_CONTACTS_NAME);
+                ContactList list = ((TitusApplication) getApplication()).getContactList();
+                Writer.writeContactList(file, list);
             }
         }
     }

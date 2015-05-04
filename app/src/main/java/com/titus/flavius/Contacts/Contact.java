@@ -1,10 +1,13 @@
 package com.titus.flavius.Contacts;
 
-public class Contact implements Comparable<Contact>{
+import java.io.Serializable;
+
+public class Contact implements Serializable, Comparable<Contact>{
     //TODO add multiples, more info
-    private String name = null;
+    private String name = "";
     private PhoneNumber phoneNumber = null;
     private Email email = null;
+
 
     public Contact(){}
     public Contact(String name){ this.name = name; }
@@ -49,5 +52,10 @@ public class Contact implements Comparable<Contact>{
     @Override
     public int compareTo(Contact compContact) {
         return name.compareTo(compContact.name);
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + getPhoneNumberText() + " " + getEmailText();
     }
 }

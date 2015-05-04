@@ -20,7 +20,7 @@ public class GetContactsService extends IntentService {
     }
 
     public void readContacts(){
-        ContactList allContacts = ((TitusApplication) this.getApplication()).getAllContacts();
+        ContactList allContacts = new ContactList();
 
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -63,6 +63,7 @@ public class GetContactsService extends IntentService {
             allContacts.addContact(tempContact);
         }
         allContacts.sort();
+        ((TitusApplication) this.getApplication()).getContactList().setAllContacts(allContacts.getAllContacts());
 
         //let the main activity know that the list is updated
         Intent tmpIntent = new Intent();

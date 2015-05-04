@@ -6,7 +6,7 @@ import com.titus.flavius.Contacts.ContactList;
 public class TitusApplication extends Application {
     private ContactList allContacts = new ContactList();
 
-    public ContactList getAllContacts() {
+    public ContactList getContactList() {
         return allContacts;
     }
 }
