@@ -49,7 +49,6 @@ public class MainActivity extends ActionBarActivity {
         //if there's old info, reuse it
         File storedList = new File(getFilesDir(), ALL_CONTACTS_NAME);
         if(storedList.exists()){
-            Log.d("ZS","got old info");
             ContactList list = Reader.readContactList(storedList);
             ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
             reloadContactsList();

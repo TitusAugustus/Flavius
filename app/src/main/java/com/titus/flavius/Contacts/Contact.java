@@ -1,16 +1,23 @@
 package com.titus.flavius.Contacts;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Contact implements Serializable, Comparable<Contact>{
     //TODO add multiples, more info
     private String name = "";
-    private PhoneNumber phoneNumber = null;
-    private Email email = null;
+    private ArrayList<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+    private ArrayList<Email> emails = new ArrayList<Email>();
+
+
+    private int numTimesContactedPhone = 0;
+    private Date lastTimeContactedPhone = null;
 
 
     public Contact(){}
     public Contact(String name){ this.name = name; }
+
 
     public String getName() {
         return name;
@@ -19,35 +26,42 @@ public class Contact implements Serializable, Comparable<Contact>{
         this.name = name;
     }
 
-
     public PhoneNumber getPhoneNumber() {
-        return phoneNumber;
+        return phoneNumbers.get(0);
     }
     public String getPhoneNumberText(){
-        if(phoneNumber == null) return "";
-        return phoneNumber.toString();
+        if(phoneNumbers.isEmpty()) return "";
+        return getPhoneNumber().toString();
     }
-    public void setPhoneNumber(PhoneNumber phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void addPhoneNumber(PhoneNumber phoneNumber) {
+        phoneNumbers.add(phoneNumber);
     }
-    public void setPhoneNumber(String phone) {
-        this.phoneNumber = new PhoneNumber(phone);
-    }
-
+    public void addPhoneNumber(String phone) { addPhoneNumber(new PhoneNumber(phone)); }
 
     public Email getEmail() {
-        return email;
+        return emails.get(0);
     }
     public String getEmailText(){
-        if(email == null) return "";
-        return email.toString();
+        if(emails.isEmpty()) return "";
+        return getEmail().toString();
     }
-    public void setEmail(Email email) {
-        this.email = email;
+    public void addEmail(Email email) { emails.add(email); }
+    public void addEmail(String emailAddr) { addEmail(new Email(emailAddr)); }
+
+    public int getNumTimesContactedPhone() {
+        return numTimesContactedPhone;
     }
-    public void setEmail(String emailAddr) {
-        this.email = new Email(emailAddr);
+    public void setNumTimesContactedPhone(int numTimesContactedPhone) {
+        this.numTimesContactedPhone = numTimesContactedPhone;
     }
+
+    public Date getLastTimeContactedPhone() {
+        return lastTimeContactedPhone;
+    }
+    public void setLastTimeContactedPhone(Date lastTimeContactedPhone) {
+        this.lastTimeContactedPhone = lastTimeContactedPhone;
+    }
+
 
     @Override
     public int compareTo(Contact compContact) {

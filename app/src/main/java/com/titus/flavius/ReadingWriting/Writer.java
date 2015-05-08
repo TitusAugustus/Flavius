@@ -46,6 +46,5 @@ public class Writer
         } catch(IOException ex){
             ex.printStackTrace();
         }
-        Log.d("XC","written");
     }
 }

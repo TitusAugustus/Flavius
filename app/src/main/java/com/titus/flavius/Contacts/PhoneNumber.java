@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 public class PhoneNumber implements Serializable{
     static Pattern phoneNumberPattern = Pattern.compile("^\\+(\\d*)(\\d{3})(\\d{7})$");
 
+    private PhoneType type = PhoneType.DEFAULT;
     private short countryCode, areaCode;
     private long mainNumber;
 
@@ -28,5 +29,9 @@ public class PhoneNumber implements Serializable{
         phoneText += "("+areaCode+") ";
         phoneText += mainNumber;
         return phoneText;
+    }
+
+    public enum PhoneType{
+        DEFAULT, HOME, WORK
     }
 }
