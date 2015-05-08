@@ -10,10 +10,6 @@ import com.titus.flavius.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by Zack on 4/19/2015.
- * Designed to encompass all of the bubbles, which will each be Views.
- */
 public class BubbleViewGroup extends ViewGroup {
     private ArrayList<Bubble> allBubbles = new ArrayList<Bubble>();
 

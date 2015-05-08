@@ -2,6 +2,7 @@ package com.titus.flavius.Bubbles;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
@@ -11,12 +12,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
+import android.widget.Toast;
+
+import com.titus.flavius.GetContactsService;
+
+import java.util.Random;
 
 
-/**
- * Created by Zack on 4/19/2015.
- * Designed to represent a single contact.
- */
 public class Bubble extends View {
     private RectF bounds = new RectF();
     float cx = 0, cy = 0;
@@ -104,6 +106,10 @@ public class Bubble extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         bounds = new RectF(0,0,w,h);
+        Random rand = new Random();
+        cx = (float)(w - 2*radius) * rand.nextFloat() + radius;
+        cy = (float)(h - 2*radius) * rand.nextFloat() + radius;
+        redraw();
     }
 
     @Override
