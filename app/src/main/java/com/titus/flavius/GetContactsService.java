@@ -37,14 +37,10 @@ public class GetContactsService extends IntentService {
             tempContact.setName(name);
 
             String timesContacted = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.TIMES_CONTACTED));
-            tempContact.setNumTimesContactedPhone(Integer.parseInt(timesContacted));
+            tempContact.setCountContactedPhone(Integer.parseInt(timesContacted));
+            Log.d("zs", tempContact.getName() + " " + timesContacted);
             String lastContacted = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
-            Log.d("zs",lastContacted);
-            try {
-                tempContact.setLastTimeContactedPhone(Date.valueOf(lastContacted));
-                Log.d("zs",Date.valueOf(lastContacted).toString());
-            } catch (Exception e) {}
-            //TODO test work here
+            tempContact.setLastContactedPhone(new Date(Long.parseLong(lastContacted)));
 
             //phone
             if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {

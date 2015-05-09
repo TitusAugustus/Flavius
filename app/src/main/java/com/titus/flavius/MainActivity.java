@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -50,8 +49,10 @@ public class MainActivity extends ActionBarActivity {
         File storedList = new File(getFilesDir(), ALL_CONTACTS_NAME);
         if(storedList.exists()){
             ContactList list = Reader.readContactList(storedList);
-            ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
-            reloadContactsList();
+            if(list != null) {
+                ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
+                reloadContactsList();
+            }
         }
 
         //start get contact info from phone
@@ -69,18 +70,20 @@ public class MainActivity extends ActionBarActivity {
         ListView contactListView = (ListView) findViewById(R.id.listView);
 
         ArrayList<String> list = ((TitusApplication) getApplication()).getContactList().getContactNames();
-        list.add(((TitusApplication) getApplication()).getContactList().getAllContacts().size() + "");
         final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         contactListView.setAdapter(adapter);
 
         contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                Contact currContact = ((TitusApplication) getApplication()).getContactList().getContactFromName(item);
+                //deprecated. will be necessary later if contacts become stored in more complicated structure
+                //final String item = (String) parent.getItemAtPosition(position);
+                //Contact currContact = ((TitusApplication) getApplication()).getContactList().getContactFromName(item);
+                Contact currContact = ((TitusApplication) getApplication()).getContactList().getAllContacts().get(position);
                 ((TextView) findViewById(R.id.nameTextView)).setText(currContact.getName());
-                ((TextView) findViewById(R.id.phoneTextView)).setText(currContact.getPhoneNumberText());
-                ((TextView) findViewById(R.id.emailTextView)).setText(currContact.getEmailText());
+                ((TextView) findViewById(R.id.phoneTextView)).setText(currContact.getPhoneNumberString());
+                ((TextView) findViewById(R.id.emailTextView)).setText(currContact.getEmailString() +
+                        "\n" + currContact.getCountContactedPhone() + "\n" + currContact.getLastContactedPhoneString());
                 flipNext();
             }
         });

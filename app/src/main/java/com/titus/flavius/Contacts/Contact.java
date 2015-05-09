@@ -11,8 +11,8 @@ public class Contact implements Serializable, Comparable<Contact>{
     private ArrayList<Email> emails = new ArrayList<Email>();
 
 
-    private int numTimesContactedPhone = 0;
-    private Date lastTimeContactedPhone = null;
+    private int countContactedPhone = 0;
+    private Date lastContactedPhone = null;
 
 
     public Contact(){}
@@ -29,7 +29,7 @@ public class Contact implements Serializable, Comparable<Contact>{
     public PhoneNumber getPhoneNumber() {
         return phoneNumbers.get(0);
     }
-    public String getPhoneNumberText(){
+    public String getPhoneNumberString(){
         if(phoneNumbers.isEmpty()) return "";
         return getPhoneNumber().toString();
     }
@@ -41,35 +41,46 @@ public class Contact implements Serializable, Comparable<Contact>{
     public Email getEmail() {
         return emails.get(0);
     }
-    public String getEmailText(){
+    public String getEmailString(){
         if(emails.isEmpty()) return "";
         return getEmail().toString();
     }
     public void addEmail(Email email) { emails.add(email); }
     public void addEmail(String emailAddr) { addEmail(new Email(emailAddr)); }
 
-    public int getNumTimesContactedPhone() {
-        return numTimesContactedPhone;
+    public int getCountContactedPhone() {
+        return countContactedPhone;
     }
-    public void setNumTimesContactedPhone(int numTimesContactedPhone) {
-        this.numTimesContactedPhone = numTimesContactedPhone;
+    public void setCountContactedPhone(int countContactedPhone) {
+        this.countContactedPhone = countContactedPhone;
     }
 
-    public Date getLastTimeContactedPhone() {
-        return lastTimeContactedPhone;
+    public Date getLastContactedPhone() {
+        return lastContactedPhone;
     }
-    public void setLastTimeContactedPhone(Date lastTimeContactedPhone) {
-        this.lastTimeContactedPhone = lastTimeContactedPhone;
+    public String getLastContactedPhoneString() {
+        if(lastContactedPhone.getTime() == 0) return "no contact";
+        return getLastContactedPhone().toString();
+    }
+    public void setLastContactedPhone(Date lastContactedPhone) {
+        this.lastContactedPhone = lastContactedPhone;
     }
 
 
     @Override
     public int compareTo(Contact compContact) {
+        long contactDiff = compContact.lastContactedPhone.getTime() - lastContactedPhone.getTime();
+        if(contactDiff != 0)
+            return (contactDiff < 0)?-1:1;
+        //uses number of times contacted instead of how recent it was
+//        int contactDiff = compContact.countContactedPhone - countContactedPhone;
+//        if(contactDiff != 0)
+//            return contactDiff;
         return name.compareTo(compContact.name);
     }
 
     @Override
     public String toString() {
-        return name + " " + getPhoneNumberText() + " " + getEmailText();
+        return name + " " + getPhoneNumberString() + " " + getEmailString();
     }
 }
