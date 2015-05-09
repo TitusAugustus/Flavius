@@ -1,6 +1,6 @@
 package com.titus.flavius;
 
-Sandroid.content.BroadcastReceiver;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,9 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
 import com.titus.flavius.Bubbles.BubbleViewGroup;
 import com.titus.flavius.Contacts.Contact;
-import com.titus.flavius.Contacts.ContactList;S
+import com.titus.flavius.Contacts.ContactList;
 import com.titus.flavius.ReadingWriting.Reader;
 import com.titus.flavius.ReadingWriting.Writer;
 
@@ -34,19 +38,23 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
     private final String ALL_CONTACTS_NAME = "allcontacts";
-    ReloadListReceiver mReceiver = new ReloadListReceiver();
+
+    private ReloadListReceiver mReceiver = new ReloadListReceiver();
+
     private ViewFlipper viewFlipper;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+
     private final float screenPctgNeededForFlip = .90f;
-    CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         //intialise facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.activity_main);
-
-
 
         viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
@@ -57,19 +65,40 @@ public class MainActivity extends ActionBarActivity {
         File storedList = new File(getFilesDir(), ALL_CONTACTS_NAME);
         if(storedList.exists()){
             ContactList list = Reader.readContactList(storedList);
-            ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
-            reloadContactsList();
+            if(list != null) {
+                ((TitusApplication) getApplication()).getContactList().setAllContacts(list.getAllContacts());
+                reloadContactsList();
+            }
         }
 
-        //start get contact info from phone
+        //start to get contact info from phone
         Intent intent = new Intent(getApplicationContext(), GetContactsService.class);
         getApplicationContext().startService(intent);
 
-        //set up reciever for reload list broadcasts
+        //set up receiver for reload list broadcasts
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReloadListReceiver.RELOAD_CONTACTS_LIST_MSG);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(mReceiver, filter);
+
+        //set up facebook login button
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("user_friends");
+
+        //register button callback
+        callbackManager = CallbackManager.Factory.create();
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                //TODO take in information
+            }
+
+            @Override
+            public void onCancel() {}
+
+            @Override
+            public void onError(FacebookException exception) {}
+        });
     }
 
     public void reloadContactsList(){
