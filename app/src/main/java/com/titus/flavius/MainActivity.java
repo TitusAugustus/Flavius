@@ -1,6 +1,6 @@
 package com.titus.flavius;
 
-import android.content.BroadcastReceiver;
+Sandroid.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,9 +19,12 @@ import android.widget.ViewFlipper;
 
 import com.titus.flavius.Bubbles.BubbleViewGroup;
 import com.titus.flavius.Contacts.Contact;
-import com.titus.flavius.Contacts.ContactList;
+import com.titus.flavius.Contacts.ContactList;S
 import com.titus.flavius.ReadingWriting.Reader;
 import com.titus.flavius.ReadingWriting.Writer;
+
+import com.facebook.FacebookSdk;
+import com.facebook.login.widget.LoginButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,15 +34,19 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
     private final String ALL_CONTACTS_NAME = "allcontacts";
-
     ReloadListReceiver mReceiver = new ReloadListReceiver();
     private ViewFlipper viewFlipper;
     private final float screenPctgNeededForFlip = .90f;
-
+    CallbackManager callbackManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        //intialise facebook sdk
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+
 
         viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
@@ -87,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void flipNext(){
-        if (viewFlipper.getDisplayedChild() == 2) return;
+        if (viewFlipper.getDisplayedChild() == 3) return;
 
         viewFlipper.setInAnimation(this, R.anim.in_right);
         viewFlipper.setOutAnimation(this, R.anim.out_left);
